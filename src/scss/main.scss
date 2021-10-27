@@ -1,0 +1,54 @@
+* {
+    box-sizing: border-box;
+}
+
+html {
+    background: #0e0e0e;
+}
+
+body {
+    width: 100vw;
+    height: 100vh;
+    overflow: hidden;
+    font-size: 0.8rem;
+    font-family: Arial, Helvetica, sans-serif;
+}
+
+#root {
+    width: 100vw;
+    height: 100vh;
+    overflow: hidden;
+    padding: 0;
+    margin: 0;
+    position: absolute;
+    top: 0;
+    left: 0;
+    z-index: -1;
+    outline: none;
+    border: none;
+    touch-action: none;
+    -webkit-touch-callout: none;
+    -webkit-user-drag: none;
+    -webkit-tap-highlight-color: transparent;
+    -webkit-text-size-adjust: none;
+    text-size-adjust: none;
+}
+
+#text {
+    position: absolute;
+    z-index: 2;
+    top: 50px;
+    left: 50vw;
+    color: #989898;
+    text-transform: uppercase;
+    transform: translateX(-50%);
+}
+#link {
+    position: absolute;
+    z-index: 2;
+    bottom: 50px;
+    left: 50vw;
+    color: #989898;
+    text-transform: uppercase;
+    transform: translateX(-50%);
+}
