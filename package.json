@@ -4,7 +4,7 @@
   "description": "Repo to test page transitions with Alien.js",
   "source": [
     "src/index.html",
-    "src/page2.html"
+    "src/index2.html"
   ],
   "browserslist": "> 0.5%, last 2 versions, not dead",
   "scripts": {
