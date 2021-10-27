@@ -26,6 +26,7 @@
   },
   "homepage": "https://github.com/ksh-r/barba-alien-test#readme",
   "devDependencies": {
+    "@parcel/transformer-sass": "^2.0.0",
     "parcel": "^2.0.0",
     "parcel-reporter-static-files-copy": "^1.3.0"
   },
