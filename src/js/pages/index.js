@@ -1,8 +1,3 @@
-// Config
-import { Events } from "../../3d/config/Events";
-import { Device } from "../../3d/config/Device";
-// Controllers
-import { Stage } from "../../3d/controllers/Stage";
 // Loaders
 import { EnvironmentTextureLoader } from "../../3d/loaders/world/EnvironmentTextureLoader";
 import { TextureLoader } from "../../3d/loaders/world/TextureLoader";
@@ -279,7 +274,7 @@ class SceneController {
     }
 
     static addListeners() {
-        Stage.element.addEventListener('pointerdown', this.onPointerDown);
+        window.addEventListener('pointerdown', this.onPointerDown);
         window.addEventListener('pointermove', this.onPointerMove);
         window.addEventListener('pointerup', this.onPointerUp);
     }
@@ -297,8 +292,8 @@ class SceneController {
             return;
         }
 
-        this.target.x = (clientX / Stage.width) * 2 - 1;
-        this.target.y = 1 - (clientY / Stage.height) * 2;
+        this.target.x = (clientX / window.innerWidth) * 2 - 1;
+        this.target.y = 1 - (clientY / window.innerHeight) * 2;
     };
 
     static onPointerUp = e => {
@@ -550,7 +545,7 @@ class CameraController {
     }
 
     static addListeners() {
-        Stage.element.addEventListener('pointerdown', this.onPointerDown);
+        window.addEventListener('pointerdown', this.onPointerDown);
         window.addEventListener('pointermove', this.onPointerMove);
         window.addEventListener('pointerup', this.onPointerUp);
     }
@@ -733,18 +728,12 @@ class App {
         //     this.initThread();
         // }
 
-        this.initStage();
         this.initWorld();
         this.initViews();
         this.initControllers();
 
-        this.addListeners();
-        this.onResize();
-
         await SceneController.ready();
 
-        CameraController.animateIn();
-        SceneController.animateIn();
     }
 
     static initThread() {
@@ -754,13 +743,8 @@ class App {
         Thread.shared();
     }
 
-    static initStage() {
-        Stage.css({ cursor: 'none' });
-    }
-
     static initWorld() {
         WorldController.init();
-        Stage.add(WorldController.element);
     }
 
     static initViews() {
@@ -777,8 +761,13 @@ class App {
     }
 
     static addListeners() {
-        Stage.events.on(Events.RESIZE, this.onResize);
+        window.addEventListener('resize', this.onResize);
         ticker.add(this.onUpdate);
+    }
+
+    static removeListeners() {
+        window.removeEventListener('resize', this.onResize);
+        ticker.remove(this.onUpdate);
     }
 
     /**
@@ -786,7 +775,9 @@ class App {
      */
 
     static onResize = () => {
-        const { width, height, dpr } = Stage;
+        const width = window.innerWidth;
+        const height = window.innerHeight;
+        const dpr = window.devicePixelRatio;
 
         WorldController.resize(width, height, dpr);
         CameraController.resize(width, height);
@@ -800,23 +791,38 @@ class App {
         SceneController.update();
         RenderManager.update(time, delta, frame);
     };
+
+    static animateIn = () => {
+        console.log('animateIn');
+        this.addListeners();
+        this.onResize();
+
+        CameraController.animateIn();
+        SceneController.animateIn();
+    };
+
+    static animateOut = () => {
+        console.log('animateOut');
+        this.removeListeners();
+    };
 }
+
+App.init();
 
 class Index {
     namespace = 'index';
 
     beforeEnter = data => {
         console.log('Index beforeEnter view')
+        document.getElementById('root').appendChild(WorldController.element);
+        App.animateIn();
     }
     afterEnter = data => {
         console.log('Index afterEnter view')
-        App.init();
-        console.log(WorldController.element)
     }
     beforeLeave = data => {
         console.log('Index beforeLeave view')
-        // console.log(WorldController.element)
-        // Stage.remove(WorldController.element)
+        App.animateOut();
     }
     afterLeave = data => {
         console.log('Index afterLeave view')
